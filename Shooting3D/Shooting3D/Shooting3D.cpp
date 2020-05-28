@@ -21,7 +21,7 @@ bool InBound(T a, T b, T c) { return (a) <= (b) and (b) <= (c); }
 
 bool movableSpace(double x, double y) {
 	return InBound<double>(0, x, mapWidth - 1) and InBound<double>(0, y, mapHeight - 1) and
-		world[(int)(x)+(int)(y)* mapWidth] != WALL;
+		world[(int)(x)+(int)(y)* mapWidth] != WALL_CHAR;
 }
 
 class Shooting3D : public olc::PixelGameEngine {
@@ -32,16 +32,16 @@ public:
 		for (int x = 0; x < mapWidth; x++)
 			for (int y = 0; y < mapHeight; y++) {
 				//screen[x + (y + 1) * screenWidth] = world[x + y * mapWidth];
-				Draw(x, y + 1, world[x + y * mapWidth]);
+				Draw(x, y + 1, world[x + y * mapWidth] == SPACE_CHAR ? DEBUG_SPACE : DEBUG_WALL);
 			}
 
 		//screen[(int)(playerX) + ((int)(playerY) + 1) * screenWidth] = PLAYER;
-		Draw((int)(playerX), (int)(playerY)+1, PLAYER);
+		Draw((int)(playerX), (int)(playerY)+1, DEBUG_PLAYER);
 
 		int moveX = (int)round(cos(playerAng));
 		int moveY = (int)round(-sin(playerAng));
 		//screen[(int)((int)(playerX + (double)moveX) + ((int)(playerY + (double)moveY) + 1) * screenWidth)] = L'*';
-		Draw((int)(playerX + (double)moveX), (int)(playerY + (double)moveY) + 1, L'*');
+		Draw((int)(playerX + (double)moveX), (int)(playerY + (double)moveY) + 1, DEBUG_VISION);
 	}
 
 	void inputHandler() {
@@ -54,7 +54,7 @@ public:
 		double moveX = cos(playerAng) * playerSpeedInSec * deltaTimeInSec;
 		double moveY = -sin(playerAng) * playerSpeedInSec * deltaTimeInSec;
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000) {
-			if (movableSpace(playerX + moveY, playerY + moveX)) {
+			if (movableSpace(playerX + moveY, playerY - moveX)) {
 				playerX += moveY;
 				playerY -= moveX;
 			}
@@ -159,7 +159,7 @@ public:
 		for (int i = 0; i < screenWidth * screenHeight; i++) 
 			Draw(i % screenWidth, i / screenWidth, SPACE);
 		update();
-		//debug();
+		debug();
 		//Draw( screenWidth / 2, screenHeight / 2, olc::WHITE);
 
 		return true;
@@ -170,7 +170,7 @@ public:
 int main()
 {	
 	Shooting3D game;	
-	if(game.Construct(screenWidth, screenHeight, 8, 8))
+	if(game.Construct(screenWidth, screenHeight, 4, 4))
 		game.Start();
 }
 
