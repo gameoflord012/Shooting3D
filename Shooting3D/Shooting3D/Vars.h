@@ -10,9 +10,8 @@ const wchar_t PLAYER = L'X';
 const wchar_t CORNER = L' ';
 
 //const int screenWidth = 152;
-const int screenWidth = 120;
-const int screenHeight = 32;
-wchar_t* screen = new wchar_t[screenWidth * screenHeight];
+const int screenWidth = 320;
+const int screenHeight = 240;
 
 const int mapWidth = 16;
 const int mapHeight = 16;
@@ -34,9 +33,7 @@ const int vewDistance = 160;
 
 const double aceptedCornerDistance = 0.1;
 
-HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-
-wstring map = []() -> wstring {
+wstring world = []() -> wstring {
 	return
 		wstring(L"################") +
 		wstring(L"#..............#") +
@@ -56,5 +53,7 @@ wstring map = []() -> wstring {
 		wstring(L"################");
 } ();
 
-vector<short> wallShadow = { 0x2591, 0x2592, 0x2593, 0x2588 };
-vector<short> floorShadow = { ' ', '.', '-', '=', 'm', '#' };
+
+/*Farset to closest*/
+vector<olc::Pixel> wallShadow = { olc::BLACK, olc::VERY_DARK_GREY, olc::DARK_GREY,  olc::GREY };
+vector<olc::Pixel> floorShadow = { olc::VERY_DARK_BLUE, olc::DARK_BLUE, olc::BLUE };
